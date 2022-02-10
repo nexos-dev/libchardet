@@ -38,8 +38,11 @@ SUBDIRS = . src man test
 dist_doc_DATA = Changelog LICENSE
 
 bin_SCRIPTS = chardet-config
-pkgconfigdir=$(libdir)/pkgconfig
+pkgconfigdir=$(datadir)/pkgconfig
 pkgconfig_DATA = chardet.pc
+
+cmakedir=$(datadir)/cmake
+cmake_DATA = LibChardetConfig.cmake
 
 DISTCLEANFILES += *.bz2 aclocal.m4 *~
 

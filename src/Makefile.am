@@ -36,7 +36,7 @@ SONAME_VERSION  = @SONAME_VERSION@
 includedir = @includedir@/chardet
 
 include_HEADERS = nsUniversalDetector.h chardet.h \
-				../include/nscore.h ../include/version.h \
+				$(srcdir)/../include/nscore.h $(srcdir)/../include/version.h \
 				../chardet-config.h
 noinst_HEADERS = CharDistribution.h \
 				nsCodingStateMachine.h \
@@ -56,7 +56,7 @@ noinst_HEADERS = CharDistribution.h \
 				nsCharSetProber.h \
 				nsEscCharsetProber.h \
 				nsPkgInt.h \
-				../include/prmem.h \
+				$(srcdir)/../include/prmem.h \
 				tables/Big5Freq.tab \
 				tables/EUCKRFreq.tab \
 				tables/EUCTWFreq.tab \
@@ -90,4 +90,4 @@ libchardet_la_SOURCES = CharDistribution.cpp JpCntx.cpp \
 		nsMBCSGroupProber.cpp nsMBCSSM.cpp nsSBCSGroupProber.cpp \
 		nsSBCharSetProber.cpp nsSJISProber.cpp nsUTF8Prober.cpp \
 		nsUniversalDetector.cpp chardet.cpp
-libchardet_la_CPPFLAGS = -I../include
+libchardet_la_CPPFLAGS = -I$(srcdir)/../include
