@@ -41,7 +41,7 @@ bin_SCRIPTS = chardet-config
 pkgconfigdir=$(datadir)/pkgconfig
 pkgconfig_DATA = chardet.pc
 
-cmakedir=$(datadir)/cmake
+cmakedir=$(datadir)/libchardet/cmake
 cmake_DATA = LibChardetConfig.cmake
 
 DISTCLEANFILES += *.bz2 aclocal.m4 *~

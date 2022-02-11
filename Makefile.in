@@ -421,7 +421,7 @@ dist_doc_DATA = Changelog LICENSE
 bin_SCRIPTS = chardet-config
 pkgconfigdir = $(datadir)/pkgconfig
 pkgconfig_DATA = chardet.pc
-cmakedir = $(datadir)/cmake
+cmakedir = $(datadir)/libchardet/cmake
 cmake_DATA = LibChardetConfig.cmake
 all: chardet-config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
