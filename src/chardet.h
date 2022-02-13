@@ -46,8 +46,16 @@
 */
 
 
+#ifdef IN_CHARDET
 #ifdef HAVE_CONFIG_H
 #include <chardet-config.h>
+#endif
+#include <version.h>
+#else
+#ifdef HAVE_CONFIG_H
+#include <chardet/chardet-config.h>
+#endif
+#include <chardet/version.h>
 #endif
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -63,8 +71,6 @@
 		#define CHARDET_API
 	#endif
 #endif
-
-#include <version.h>
 
 #include <stdio.h>
 #include <string.h>
