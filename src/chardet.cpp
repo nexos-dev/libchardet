@@ -219,7 +219,10 @@ CHARDET_API short detect_file (const char* fileName, size_t sampleSize, DetectOb
     char* buf = (char*) malloc (sampleSize);
     if (fread (buf, 1, sampleSize, file) == 0 && st.st_size != 0)
         return CHARDET_IO_ERROR;
-    return detect_r (buf, sampleSize, obj);
+    fclose (file);
+    short res = detect_r (buf, sampleSize, obj);
+    free (buf);
+    return res;
 }
 
 /*
