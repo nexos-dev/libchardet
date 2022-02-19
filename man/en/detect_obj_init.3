@@ -9,19 +9,19 @@ detect_obj_init - initialize DetectObject structure
 .SH SNOPSIS
 .I #include <chardet.h>
 .br
-.I DetectObj chardet_obj_init (void);
+.I DetectObj* chardet_obj_init (void);
 
 .SH DESCRIPTION
 initialize
 .B DetectObj
-structure that is stored chardet informations.
+structure that stores character detection information.
 
 .SH "RETURN VALUE"
 Returns
-.B DetectObject
-structure. The return value is must freed by
+.B DetectObj
+structure. The return value must be freed by the
 .B chardet_obj_free
-api.
+API.
 .nf
 
 	typedef struct DetectObject {
@@ -43,7 +43,7 @@ int main (void) {
 		return CHARDET_MEM_ALLOCATED_FAIL;
 	}
 
-	switch (detect ("¾È³çÇÏ¼¼¿ä", &obj)) {
+	switch (detect ("ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½", &obj)) {
 		case CHARDET_OUT_OF_MEMORY :
 			fprintf (stderr, "On handle processing, occured out of memory\\n");
 			detect_obj_free (&obj);
@@ -55,7 +55,7 @@ int main (void) {
 			return CHARDET_NULL_OBJECT;
 	}
 
-	# check support obj->bom with CHARDET_BOM_CHECK constant
+	// check support obj->bom with CHARDET_BOM_CHECK constant
 	printf ("encoding: %s, confidence: %f, exists bom: %d\\n", obj->encoding, obj->confidence, obj->bom);
 	detect_obj_free (&obj);
 

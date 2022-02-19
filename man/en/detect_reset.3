@@ -28,7 +28,7 @@ int main (void) {
 	int i, arrayNum;
 	char *str[] = {
 		"this is ascii",
-		"ÀÌ°Ç euc-kr ÀÔ´Ï´Ù."
+		"ï¿½Ì°ï¿½ euc-kr ï¿½Ô´Ï´ï¿½."
 	};
 
 	arrayNum = sizeof (str) / sizeof (str[0]);
@@ -46,7 +46,7 @@ int main (void) {
 			return CHARDET_MEM_ALLOCATED_FAIL;
 		}
 
-		switch (detect_handledata (&d, "¾È³çÇÏ¼¼¿ä", &obj)) {
+		switch (detect_handledata (&d, "ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½", &obj)) {
 			case CHARDET_OUT_OF_MEMORY :
 				fprintf (stderr, "On handle processing, occured out of memory\\n");
 				detect_obj_free (&obj);
@@ -58,7 +58,7 @@ int main (void) {
 				return CHARDET_NULL_OBJECT;
 		}
 
-		# check support obj->bom with CHARDET_BOM_CHECK constant
+		// check support obj->bom with CHARDET_BOM_CHECK constant
 		printf ("encoding: %s, confidence: %f, exists bom: %d\\n", obj->encoding, obj->confidence, obj->bom);
 		detect_obj_free (&obj);
 	}

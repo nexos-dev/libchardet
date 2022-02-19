@@ -27,22 +27,13 @@
 # the provisions above, a recipient may use your version of this file under
 # the terms of any one of the MPL, the GPL or the LGPL.
 
-EXTRA_DIST = ko/detect.3 \
-			ko/detect_handledata.3 \
-			ko/detect_obj_free.3 \
-			ko/detect_reset.3 \
-			ko/detect_destroy.3 \
-			ko/detect_init.3 \
-			ko/detect_obj_init.3
-
 dist_man_MANS = en/detect.3 \
 				en/detect_handledata.3 \
 				en/detect_obj_free.3 \
 				en/detect_reset.3 \
 				en/detect_destroy.3 \
 				en/detect_init.3 \
-				en/detect_obj_init.3
-
-ko_man3dir = $(mandir)/ko/man3
-ko_man3_DATA = $(EXTRA_DIST)
-
+				en/detect_obj_init.3 \
+                en/detect_file.3 \
+                en/detect_r.3 \
+                en/detect_handledata_r.3

@@ -35,16 +35,15 @@
 
 /*
 #if defined _WIN32 || defined __CYGWIN__
-	#define CHARDET_API
+    #define CHARDET_API
 #else
-	#if defined(__GNUC__) && __GNUC__ >= 4
-		#define CHARDET_API __attribute__ ((visibility("default")))
-	#else
-		#define CHARDET_API
-	#endif
+    #if defined(__GNUC__) && __GNUC__ >= 4
+        #define CHARDET_API __attribute__ ((visibility("default")))
+    #else
+        #define CHARDET_API
+    #endif
 #endif
 */
-
 
 #ifdef IN_CHARDET
 #ifdef HAVE_CONFIG_H
@@ -59,28 +58,29 @@
 #endif
 
 #if defined _WIN32 || defined __CYGWIN__
-	#ifdef HAVE_DLL_EXPORT
-		#define CHARDET_API __declspec(dllexport)
-	#else
-		#define CHARDET_API __declspec(dllimport)
-	#endif
+#ifdef HAVE_DLL_EXPORT
+#define CHARDET_API __declspec(dllexport)
 #else
-	#ifdef HAVE_VISIBILITY
-		#define CHARDET_API __attribute__ ((visibility("default")))
-	#else
-		#define CHARDET_API
-	#endif
+#define CHARDET_API __declspec(dllimport)
+#endif
+#else
+#ifdef HAVE_VISIBILITY
+#define CHARDET_API __attribute__ ((visibility ("default")))
+#else
+#define CHARDET_API
+#endif
 #endif
 
 #include <stdio.h>
 #include <string.h>
 
-#define CHARDET_OUT_OF_MEMORY -128
+#define CHARDET_OUT_OF_MEMORY      -128
 #define CHARDET_MEM_ALLOCATED_FAIL -127
 
 #define CHARDET_SUCCESS     0
 #define CHARDET_NO_RESULT   1
 #define CHARDET_NULL_OBJECT 2
+#define CHARDET_IO_ERROR    3
 
 // whether to support detect_r and detect_handledata_r API
 #define CHARDET_BINARY_SAFE 1
@@ -89,35 +89,38 @@
 #define CHARDET_BOM_CHECK 1
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-	typedef struct Detect_t Detect;
+    typedef struct Detect_t Detect;
 
-	typedef struct DetectObject {
-		char * encoding;
-		float confidence;
-		short bom;
-	} DetectObj;
+    typedef struct DetectObject
+    {
+        char* encoding;
+        float confidence;
+        short bom;
+    } DetectObj;
 
-	CHARDET_API char * detect_version (void);
-	CHARDET_API char * detect_uversion (void);
+    CHARDET_API char* detect_version (void);
+    CHARDET_API char* detect_uversion (void);
 
-	CHARDET_API DetectObj * detect_obj_init (void);
-	CHARDET_API void detect_obj_free (DetectObj **);
+    CHARDET_API DetectObj* detect_obj_init (void);
+    CHARDET_API void detect_obj_free (DetectObj**);
 
-	CHARDET_API Detect * detect_init (void);
-	CHARDET_API void detect_reset (Detect **);
-	CHARDET_API void detect_dataend (Detect **);
-	CHARDET_API short detect_handledata (Detect **, const char *, DetectObj **);
-	CHARDET_API short detect_handledata_r (Detect **, const char *, size_t, DetectObj **);
-	CHARDET_API void detect_destroy (Detect **);
-	CHARDET_API short detect (const char *, DetectObj **);
-	CHARDET_API short detect_r (const char *, size_t, DetectObj **);
+    CHARDET_API Detect* detect_init (void);
+    CHARDET_API void detect_reset (Detect**);
+    CHARDET_API void detect_dataend (Detect**);
+    CHARDET_API short detect_handledata (Detect**, const char*, DetectObj**);
+    CHARDET_API short detect_handledata_r (Detect**, const char*, size_t, DetectObj**);
+    CHARDET_API void detect_destroy (Detect**);
+    CHARDET_API short detect (const char*, DetectObj**);
+    CHARDET_API short detect_r (const char*, size_t, DetectObj**);
+    CHARDET_API short detect_file (const char* fileName, size_t sampleSize, DetectObj** obj);
 #ifdef __cplusplus
 };
 #endif
 
-#endif // close define CHARDET_H
+#endif    // close define CHARDET_H
 
 /*
  * Local variables:

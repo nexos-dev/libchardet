@@ -12,7 +12,7 @@ detect_destroy \- free Detector structure
 .BI "void detect_destroy (Detect ** handle);"
 
 .SH DESCRIPTION
-Free resource that allocated by
+Free resource that was allocated by
 .BI detect_init
 api.
 
@@ -28,7 +28,7 @@ int main (void) {
 	DetectObj * obj;
 
 	if ( (d = detect_init ()) == NULL ) {
-		fprintf (stderr, "chardet handle initialize failed\\n");
+		fprintf (stderr, "chardet handle initializization failed\\n");
 		return CHARDET_MEM_ALLOCATED_FAIL;
 	}
 
@@ -41,12 +41,12 @@ int main (void) {
 
 	switch (detect_handledata (&d, "안녕하세요", &obj)) {
 		case CHARDET_OUT_OF_MEMORY :
-			fprintf (stderr, "On handle processing, occured out of memory\\n");
+			fprintf (stderr, "On handle processing, out occured of memory\\n");
 			detect_obj_free (&obj);
 			return CHARDET_OUT_OF_MEMORY;
 		case CHARDET_NULL_OBJECT :
 			fprintf (stderr,
-					"3st argument of chardet_handledata() is must memory allocation "
+					"3rd argument of chardet_handledata() must be allocated "
 					"with detect_obj_init API\\n");
 			return CHARDET_NULL_OBJECT;
 	}

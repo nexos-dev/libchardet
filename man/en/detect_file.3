@@ -1,0 +1,132 @@
+.TH detect_file 3 2022-02-19 "libchardet manuals"
+
+.SH NAME
+detect_file \- Detects the character set of a file and measures the accuracy of the detection
+
+.SH SYNOPSIS
+.B "#include <chardet/chardet.h>"
+.sp
+.BI "short detect_file (const char* fileName, size_t sampleSize, DetectObj** obj)"
+
+.SH DESCRIPTION
+Detect the character encoding of fileName, and put the result in obj.
+.BI detect_file
+reads in
+.UL sampleSize
+number of bytes, and calls
+.BI detect_r
+to determine the character set used by this file. The result is put in
+.UL obj
+
+.SS Arguments:
+.TP
+.B fileName
+.br
+the file to detect the character set of
+
+.TP
+.B sampleSize
+.br
+the number of bytes to sample in order to detect the character set. If 0, then 4096 bytes are sampled
+
+.TP
+.B obj
+.br
+the object to put the result in. It has a structure as follows:
+
+.nf
+	typedef struct DetectObject {
+		char * encoding;
+		float confidence;
+	} DetectObj;
+.fi
+
+.B obj
+must be initialized by
+.BI detect_obj_init
+API first.
+
+.SH "RETURN VALUE"
+Returns the following:
+
+.TP
+.B CHARDET_SUCCESS
+.br
+Detecting success
+
+.TP
+.B CHARDET_NO_RESULT
+.br
+Detection failure
+
+.TP
+.B CHARDET_NULL_OBJECT
+.br
+.BI obj 
+not initialized
+with
+.BI chardet_obj_init
+
+.TP
+.B CHARDET_OUT_OF_MEMORY
+.br
+An
+.B "out of memory"
+in an internal API
+
+.TP
+.B CHARDET_IO_ERROR
+.br
+An internal I/O error occured.
+.BI errno
+contains details about the error
+
+.SH EXAMPLE
+.nf
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <chardet/chardet.h>
+
+int main()
+{
+    DetectObj* obj = NULL;
+    if ( (obj = detect_obj_init ()) == NULL )
+    {
+		fprintf (stderr, "Memory Allocation failed\\n");
+		return CHARDET_MEM_ALLOCATED_FAIL;
+	}
+    switch (detect_file ("afile.txt", 0, &obj))
+	{
+		case CHARDET_OUT_OF_MEMORY :
+			fprintf (stderr, "On handle processing, occured out of memory\\n");
+			detect_obj_free (&obj);
+			return CHARDET_OUT_OF_MEMORY;
+		case CHARDET_NULL_OBJECT :
+			fprintf (stderr,
+					"2st argument of chardet() must be initialized ",
+					"with detect_obj_init API\\n");
+			return CHARDET_NULL_OBJECT;
+        case CHARDET_NO_RESULT:
+            fprintf (stderr, "An error occured while parsing the file\\n");
+            return CHARDET_NO_RESULT;
+        case CHARDET_IO_ERROR:
+            fprintf (stderr, "%s: %s\\n", "afile.txt", strerror (errno));
+            return CHARDET_IO_ERROR;
+	}
+    // check support obj->bom with CHARDET_BOM_CHECK constant
+	printf ("encoding: %s, confidence: %f, exists bom: %d\\n", obj->encoding, obj->confidence, obj->bom);
+	detect_obj_free (&obj);
+
+    return 0;
+}
+.fi
+
+.SH AUTHORS
+Jedidiah Thompson, JoungKyun.Kim <https://oops.org>
+
+.SH "BUG REPORTS"
+Use QnA board on https://github.com/nexos-dev/libchardet/issues
+
+.SH "SEE ALSO"
+detect_handledata(3), detect_obj_init(3), detect_obj_free(3), errno(3), detect_r(3)

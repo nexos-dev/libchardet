@@ -12,9 +12,9 @@ chardet_obj_free - free DetectObject structure
 .I void chardet_obj_free (DetectObj **);
 
 .SH DESCRIPTION
-Free resource of DetectObject structure that allocated by
+Free DetectObj structure that was allocated by
 .B chardet_obj_init
-api
+API.
 
 .SH "RETURN VALUE"
 void
@@ -32,7 +32,7 @@ int main (void) {
 		return CHARDET_MEM_ALLOCATED_FAIL;
 	}
 
-	switch (detect ("¾È³çÇÏ¼¼¿ä", &obj)) {
+	switch (detect ("ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½", &obj)) {
 		case CHARDET_OUT_OF_MEMORY :
 			fprintf (stderr, "On handle processing, occured out of memory\\n");
 			detect_obj_free (&obj);

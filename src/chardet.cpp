@@ -30,139 +30,196 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#include <prmem.h>
 #include <nscore.h>
-#include <nsUniversalDetector.h>
 
-class Detector: public nsUniversalDetector {
-	public:
-		Detector ()
-		: nsUniversalDetector (NS_FILTER_ALL) {}
-		virtual ~Detector () {}
-		const char *getCharsetName () { return mDetectedCharset; }
-		float getConfidence () { return mDetectedConfidence; }
-		short getIsBOM () { return mDetectedIsBOM; }
-		virtual void Reset () { this->nsUniversalDetector::Reset (); }
-	protected:
-		virtual void Report (const char* aCharset) { mDetectedCharset = aCharset; }
+#include <nsUniversalDetector.h>
+#include <prmem.h>
+#include <stdio.h>
+#include <sys/stat.h>
+
+class Detector : public nsUniversalDetector
+{
+  public:
+    Detector() : nsUniversalDetector (NS_FILTER_ALL)
+    {
+    }
+    virtual ~Detector()
+    {
+    }
+    const char* getCharsetName()
+    {
+        return mDetectedCharset;
+    }
+    float getConfidence()
+    {
+        return mDetectedConfidence;
+    }
+    short getIsBOM()
+    {
+        return mDetectedIsBOM;
+    }
+    virtual void Reset()
+    {
+        this->nsUniversalDetector::Reset();
+    }
+
+  protected:
+    virtual void Report (const char* aCharset)
+    {
+        mDetectedCharset = aCharset;
+    }
 };
 
-typedef struct Detect_t {
-	Detector *detect;
+typedef struct Detect_t
+{
+    Detector* detect;
 } Detect;
 
 #include <chardet.h>
 
-CHARDET_API char * detect_version (void) {
-	return (char *) LIBCHARDET_VERSION;
+CHARDET_API char* detect_version (void)
+{
+    return (char*) LIBCHARDET_VERSION;
 }
 
-CHARDET_API char * detect_uversion (void) {
-	return (char *) LIBCHARDET_UVERSION;
+CHARDET_API char* detect_uversion (void)
+{
+    return (char*) LIBCHARDET_UVERSION;
 }
 
-CHARDET_API DetectObj * detect_obj_init (void) {
-	DetectObj * obj;
+CHARDET_API DetectObj* detect_obj_init (void)
+{
+    DetectObj* obj;
 
-	if ( (obj = (DetectObj *) PR_Malloc (sizeof (DetectObj))) == NULL )
-		return NULL;
+    if ((obj = (DetectObj*) PR_Malloc (sizeof (DetectObj))) == NULL)
+        return NULL;
 
-	obj->encoding = NULL;
-	obj->confidence = 0.0;
-	obj->bom = 0;
+    obj->encoding = NULL;
+    obj->confidence = 0.0;
+    obj->bom = 0;
 
-	return obj;
+    return obj;
 }
 
-CHARDET_API void detect_obj_free (DetectObj ** obj) {
-	if ( *obj != NULL ) {
-		PR_FREEIF ((*obj)->encoding);
-		PR_FREEIF (*obj);
-	}
+CHARDET_API void detect_obj_free (DetectObj** obj)
+{
+    if (*obj != NULL)
+    {
+        PR_FREEIF ((*obj)->encoding);
+        PR_FREEIF (*obj);
+    }
 }
 
-CHARDET_API Detect * detect_init (void) {
-	Detect *det = NULL;
+CHARDET_API Detect* detect_init (void)
+{
+    Detect* det = NULL;
 
-	det = (Detect *) PR_Malloc (sizeof (Detect));
+    det = (Detect*) PR_Malloc (sizeof (Detect));
 
-	if ( det == NULL )
-		return NULL;
+    if (det == NULL)
+        return NULL;
 
-	det->detect	= new Detector;
-	return det;
+    det->detect = new Detector;
+    return det;
 }
 
-CHARDET_API void detect_reset (Detect **det) {
-	(*det)->detect->Reset ();
+CHARDET_API void detect_reset (Detect** det)
+{
+    (*det)->detect->Reset();
 }
 
-CHARDET_API void detect_dataend (Detect **det) {
-	(*det)->detect->DataEnd ();
+CHARDET_API void detect_dataend (Detect** det)
+{
+    (*det)->detect->DataEnd();
 }
 
-CHARDET_API short detect_handledata (Detect ** det, const char * buf, DetectObj ** obj) {
-	return detect_handledata_r (det, buf, strlen (buf), obj);
+CHARDET_API short detect_handledata (Detect** det, const char* buf, DetectObj** obj)
+{
+    return detect_handledata_r (det, buf, strlen (buf), obj);
 }
 
-CHARDET_API short detect_handledata_r (Detect ** det, const char * buf, size_t buflen, DetectObj ** obj) {
-	const char * ret;
+CHARDET_API short detect_handledata_r (Detect** det, const char* buf, size_t buflen, DetectObj** obj)
+{
+    const char* ret;
 
-	if ( (*det)->detect->HandleData (buf, buflen) == NS_ERROR_OUT_OF_MEMORY )
-		return CHARDET_OUT_OF_MEMORY;
-	(*det)->detect->DataEnd ();
+    if ((*det)->detect->HandleData (buf, buflen) == NS_ERROR_OUT_OF_MEMORY)
+        return CHARDET_OUT_OF_MEMORY;
+    (*det)->detect->DataEnd();
 
-	ret = (*det)->detect->getCharsetName ();
+    ret = (*det)->detect->getCharsetName();
 
-	if ( ! ret )
-		return CHARDET_NO_RESULT;
-	else if ( *obj == NULL )
-		return CHARDET_NULL_OBJECT;
+    if (!ret)
+        return CHARDET_NO_RESULT;
+    else if (*obj == NULL)
+        return CHARDET_NULL_OBJECT;
 
-	(*obj)->encoding = (char *) strdup (ret);
-	(*obj)->confidence = (*det)->detect->getConfidence ();
-	(*obj)->bom = (*det)->detect->getIsBOM ();
+    (*obj)->encoding = (char*) strdup (ret);
+    (*obj)->confidence = (*det)->detect->getConfidence();
+    (*obj)->bom = (*det)->detect->getIsBOM();
 
-	return CHARDET_SUCCESS;
+    return CHARDET_SUCCESS;
 }
 
-CHARDET_API void detect_destroy (Detect **det) {
-	delete (*det)->detect;
-	PR_FREEIF (*det);
+CHARDET_API void detect_destroy (Detect** det)
+{
+    delete (*det)->detect;
+    PR_FREEIF (*det);
 }
 
-CHARDET_API short detect (const char *buf, DetectObj ** obj) {
-	return detect_r (buf, strlen (buf), obj);
+CHARDET_API short detect (const char* buf, DetectObj** obj)
+{
+    return detect_r (buf, strlen (buf), obj);
 }
 
-CHARDET_API short detect_r (const char *buf, size_t buflen, DetectObj ** obj) {
-	Detector * det;
-	const char * ret;
+CHARDET_API short detect_r (const char* buf, size_t buflen, DetectObj** obj)
+{
+    Detector* det;
+    const char* ret;
 
-	det = new Detector;
-	det->Reset ();
-	if ( det->HandleData (buf, buflen) == NS_ERROR_OUT_OF_MEMORY ) {
-		delete det;
-		return CHARDET_OUT_OF_MEMORY;
-	}
-	det->DataEnd ();
+    det = new Detector;
+    det->Reset();
+    if (det->HandleData (buf, buflen) == NS_ERROR_OUT_OF_MEMORY)
+    {
+        delete det;
+        return CHARDET_OUT_OF_MEMORY;
+    }
+    det->DataEnd();
 
-	ret = det->getCharsetName ();
+    ret = det->getCharsetName();
 
-	if ( ! ret ) {
-		delete det;
-		return CHARDET_NO_RESULT;
-	} else if ( *obj == NULL ) {
-		delete det;
-		return CHARDET_NULL_OBJECT;
-	}
+    if (!ret)
+    {
+        delete det;
+        return CHARDET_NO_RESULT;
+    }
+    else if (*obj == NULL)
+    {
+        delete det;
+        return CHARDET_NULL_OBJECT;
+    }
 
-	(*obj)->encoding = (char *) strdup (ret);
-	(*obj)->confidence = det->getConfidence ();
-	(*obj)->bom = det->getIsBOM ();
+    (*obj)->encoding = (char*) strdup (ret);
+    (*obj)->confidence = det->getConfidence();
+    (*obj)->bom = det->getIsBOM();
 
-	delete det;
-	return CHARDET_SUCCESS;
+    delete det;
+    return CHARDET_SUCCESS;
+}
+
+CHARDET_API short detect_file (const char* fileName, size_t sampleSize, DetectObj** obj)
+{
+    if (!sampleSize)
+        sampleSize = 4096;
+    struct stat st;
+    if (stat (fileName, &st) == -1)
+        return CHARDET_IO_ERROR;
+    FILE* file = fopen (fileName, "r");
+    if (!file)
+        return CHARDET_IO_ERROR;
+    char* buf = (char*) malloc (sampleSize);
+    if (fread (buf, 1, sampleSize, file) == 0 && st.st_size != 0)
+        return CHARDET_IO_ERROR;
+    return detect_r (buf, sampleSize, obj);
 }
 
 /*

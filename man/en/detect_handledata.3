@@ -4,7 +4,7 @@
 .\" 2019-08-01 JoungKyun.Kim <htt://oops.org>
 
 .SH NAME
-detect_handledata, detect_handledata_r \- Detecting character set and measuring accuracy of charset
+detect_handledata, detect_handledata_r \- Detect character set and measure accuracy of charset
 
 .SH SNOPSYS
 .B "#include <chardet.h>"
@@ -14,13 +14,14 @@ detect_handledata, detect_handledata_r \- Detecting character set and measuring 
 .BI "short chardet_handledata_r (Detect ** handle, const char * inbuf, size_t inlen, DetectObj ** outbuf);"
 
 .SH DESCRIPTION
-Storing charset and accuracy of
-.B inbuf to
+Stores charset and accuracy of
+.B inbuf
+to
 .B outbuf
 
 The
 .BI detect_handledata
-API is deprecated becase this api is not binary safe. Use or replace to
+API is deprecated becase this API is not binary safe. Use or replace with
 .BI detect_handledata_r
 api.
 
@@ -29,9 +30,9 @@ api.
 .B handle
 .br
 .B Detect
-handle resource that allocated by
+handle resource that was allocated by
 .B detect_init
-api.
+API.
 
 .TP
 .B inbuf
@@ -46,11 +47,11 @@ length of input string for detecting
 .TP
 .B outbuf
 .br
-Stroing inforamtion of
+Store information of
 .B inbuf.
 The structure of
 .B outbuf
-is follows.
+is as follows:
 
 .nf
 	typedef struct DetectObject {
@@ -61,17 +62,17 @@ is follows.
 
 The
 .B outbuf
-variable is must initialized by
+variable must initialized by the
 .BI detect_obj_init
-API before calling this detect api.
+API before calling this API.
 
 .SH "RETURN VALUES"
-Returns following condition as case by case.
+Returns following conditions case by case:
 
 .TP
 .B CHARDET_SUCCESS
 .br
-Detecting success
+Detection success
 
 .TP
 .B CHARDET_NO_RESULT
@@ -81,17 +82,15 @@ Detection failure
 .TP
 .B CHARDET_NULL_OBJECT
 .br
-Don't initializing
 .B outbuf
-with
+wasn't initialized with
 .BI chardet_obj_init
 
 .TP
 .B CHARDET_OUT_OF_MEMORY
 .br
-Occuring
 .B "out of memory"
-at internal API
+occured at internal API
 
 .SH EXAMPLE
 .nf

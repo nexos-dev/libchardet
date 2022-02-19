@@ -12,14 +12,14 @@ detect_init - initialize Detect structure
 .I Detect * chardet_init (void);
 
 .SH DESCRIPTION
-initialize
+initializes
 .B Detect
 structure.
 
 .SH "RETURN VALUE"
 Returns
 .B NULL
-on false and returns
+on failure and returns
 .B Detect
 structure on success.
 .nf
@@ -49,7 +49,7 @@ int main (void) {
 		return CHARDET_MEM_ALLOCATED_FAIL;
 	}
 
-	switch (detect_handledata (&d, "¾È³çÇÏ¼¼¿ä", &obj)) {
+	switch (detect_handledata (&d, "ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½", &obj)) {
 		case CHARDET_OUT_OF_MEMORY :
 			fprintf (stderr, "On handle processing, occured out of memory\\n");
 			detect_obj_free (&obj);
