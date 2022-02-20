@@ -32,6 +32,7 @@
 
 #include <nscore.h>
 
+#include <chardet-config.h>
 #include <nsUniversalDetector.h>
 #include <prmem.h>
 #include <stdio.h>
@@ -210,7 +211,7 @@ CHARDET_API short detect_file (const char* fileName, size_t sampleSize, DetectOb
 {
     if (!sampleSize)
         sampleSize = 4096;
-    struct stat st;
+    stat_t st;
     if (stat (fileName, &st) == -1)
         return CHARDET_IO_ERROR;
     FILE* file = fopen (fileName, "r");

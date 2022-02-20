@@ -1,5 +1,5 @@
 #[[
-    LibChardetConfig.cmake.in - contains libchardet package configuration parameters
+    SdkCompilerTest.cmake - contains standard compiler tests
     Copyright 2022 The NexNix Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,19 @@
     limitations under the License
 ]]
 
-set(LIBCHARDET_VERSION @PROJECT_VERSION@)
-set(LIBCHARDET_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
-set(LIBCHARDET_VERSION_MINOR @PROJECT_VERSION_MINOR@)
-set(LIBCHARDET_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+include(CheckCSourceCompiles)
 
-@PACKAGE_INIT@
-
-# Setup basic compiler flags
-set(LIBCHARDET_PREFIX "@CMAKE_INSTALL_PREFIX@")
-set(LIBCHARDET_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set(LIBCHARDET_LIBRARY "@LIBCHARDET_LIBRARY_FILE@")
-
-add_library(chardet @LIBCHARDET_LIBTYPE@ IMPORTED)
-set_target_properties(nex PROPERTIES IMPORTED_SONAME "@LIBCHARDET_LIBRARY@")
+# Checks for one of __attribute__((visibility)) or __declspec(dll*)
+# Sets var1 and var2
+function(check_library_visibility var1 var2)
+    # Check for __declspec(dllexport)
+    check_c_source_compiles([=[
+        __declspec(dllexport) int f() {}
+        int main() {}
+        ]=] ${var1})
+    # Check for __attribute__((visibility))
+    check_c_source_compiles([=[
+        __attribute__((visibility("default"))) int f() {}
+        int main(){}
+    ]=] ${var2})
+endfunction()
