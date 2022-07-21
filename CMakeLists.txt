@@ -24,8 +24,8 @@ if(NOT HAVE_UNIX_STAT)
 endif()
 
 # Configure everything
-configure_file(${CMAKE_SOURCE_DIR}/chardet-config.h.in ${CMAKE_BINARY_DIR}/chardet-config.h)
-configure_file(${CMAKE_SOURCE_DIR}/chardet.pc.in ${CMAKE_BINARY_DIR}/chardet.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/chardet-config.h.in ${CMAKE_BINARY_DIR}/chardet-config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/chardet.pc.in ${CMAKE_BINARY_DIR}/chardet.pc @ONLY)
 
 # Sources
 list(APPEND CHARDET_SOURCES
@@ -90,7 +90,7 @@ set_target_properties(chardet PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${
 
 # Ensure symbols are hidden by default
 if(BUILD_SHARED_LIBS)
-    set_target_properties(nex PROPERTIES C_VISIBILITY_PRESET hidden)
+    set_target_properties(chardet PROPERTIES C_VISIBILITY_PRESET hidden)
 endif()
 
 # Check for a visibility method
