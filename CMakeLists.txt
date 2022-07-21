@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 include(GNUInstallDirs)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(SdkCompilerTest)
 include(CMakePackageConfigHelpers)
@@ -103,7 +103,7 @@ install(TARGETS chardet)
 
 # Install man pages
 if(UNIX)
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/man/ DESTINATION ${CMAKE_INSTALL_MANDIR})
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/man/ DESTINATION ${CMAKE_INSTALL_MANDIR})
 endif()
 
 # Figure out library type
