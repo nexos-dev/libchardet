@@ -73,8 +73,8 @@ list(APPEND CHARDET_HEADERS
             ${CMAKE_BINARY_DIR}/chardet-config.h)
 
 list(APPEND CHARDET_HEADER_DIRS
-            ${CMAKE_SOURCE_DIR}/include
-            ${CMAKE_SOURCE_DIR}/src
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
             ${CMAKE_BINARY_DIR})
 
 # Create the library
@@ -118,7 +118,7 @@ else()
 endif()
 
 # Configure package configuration file
-configure_package_config_file(${CMAKE_SOURCE_DIR}/LibChardetConfig.cmake.in 
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/LibChardetConfig.cmake.in 
                               ${CMAKE_BINARY_DIR}/LibChardetConfig.cmake
                               INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake
                               PATH_VARS CMAKE_INSTALL_INCLUDEDIR)
