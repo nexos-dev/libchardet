@@ -217,7 +217,7 @@ CHARDET_API short detect_file (const char* fileName, size_t sampleSize, DetectOb
     FILE* file = fopen (fileName, "r");
     if (!file)
         return CHARDET_IO_ERROR;
-    char* buf = (char*) malloc (sampleSize);
+    char* buf = (char*) calloc (sampleSize);
     if (fread (buf, 1, sampleSize, file) == 0 && st.st_size != 0)
         return CHARDET_IO_ERROR;
     fclose (file);
