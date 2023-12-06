@@ -8,5 +8,5 @@ includedir=@includedir@
 Name: @PACKAGE_NAME@
 Description: Mozilla's Universal Charset Detector C/C++ API
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lchardet
+Libs: -L${libdir} -lchardet -lstdc++
 Cflags: -I${includedir}/chardet @CFLAGS@
