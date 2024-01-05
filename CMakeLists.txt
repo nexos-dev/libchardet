@@ -7,6 +7,11 @@ enable_language(C CXX)
 option(BUILD_SHARED_LIBS "Specifies if shared libraries should be built" OFF)
 option(CHARDET_BUILDONLY "Specifies if installing should occur. Impiles static libraries" OFF)
 
+if(CHARDET_BUILDONLY AND BUILD_SHARED_LIBS)
+    message(STATUS "CHARDET_BUILDONLY specified, turning BUILD_SHARED_LIBS off")
+    set(BUILD_SHARED_LIBS OFF)
+endif()
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
