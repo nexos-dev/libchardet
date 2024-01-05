@@ -88,7 +88,7 @@ add_library(chardet ${CHARDET_SOURCES})
 
 # Setup compiler flags
 target_compile_definitions(chardet PRIVATE IN_CHARDET)
-target_compile_options(chardet PRIVATE -nostdinc++ -fno-rtti -fno-exceptions)
+target_compile_options(chardet PRIVATE -nostdinc++ -fno-rtti -fno-exceptions -fpic)
 target_include_directories(chardet PUBLIC ${CHARDET_HEADER_DIRS})
 
 # Set SO name
