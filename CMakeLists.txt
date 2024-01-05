@@ -5,6 +5,7 @@ project(libchardet VERSION 1.0.7)
 enable_language(C CXX)
 
 option(BUILD_SHARED_LIBS "Specifies if shared libraries should be built" OFF)
+option(CHARDET_BUILDONLY "Specifies if installing should occur. Impiles static libraries" OFF)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
@@ -97,12 +98,14 @@ endif()
 check_library_visibility(HAVE_DECLSPEC_EXPORT HAVE_VISIBILITY)
 
 # Install everything
-install(FILES ${CMAKE_BINARY_DIR}/chardet.pc DESTINATION ${CMAKE_INSTALL_DATADIR}/pkgconfig)
-install(FILES ${CHARDET_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/chardet)
-install(TARGETS chardet)
+if(NOT ${CHARDET_BUILDONLY})
+    install(FILES ${CMAKE_BINARY_DIR}/chardet.pc DESTINATION ${CMAKE_INSTALL_DATADIR}/pkgconfig)
+    install(FILES ${CHARDET_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/chardet)
+    install(TARGETS chardet)
+endif()
 
 # Install man pages
-if(UNIX)
+if(UNIX AND NOT CHARDET_BUILDONLY)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/man/ DESTINATION ${CMAKE_INSTALL_MANDIR})
 endif()
 
@@ -119,15 +122,17 @@ endif()
 
 # Configure package configuration file
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/LibChardetConfig.cmake.in 
-                              ${CMAKE_BINARY_DIR}/LibChardetConfig.cmake
-                              INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake
-                              PATH_VARS CMAKE_INSTALL_INCLUDEDIR)
+                            ${CMAKE_BINARY_DIR}/LibChardetConfig.cmake
+                            INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake
+                            PATH_VARS CMAKE_INSTALL_INCLUDEDIR)
 
 write_basic_package_version_file(${CMAKE_BINARY_DIR}/LibChardetConfigVersion.cmake
                                  COMPATIBILITY AnyNewerVersion)
 
 # Install cmake package files
-install(FILES ${CMAKE_BINARY_DIR}/LibChardetConfig.cmake 
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake)
-install(FILES ${CMAKE_BINARY_DIR}/LibChardetConfigVersion.cmake 
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake)
+if(NOT CHARDET_BUILDONLY)
+    install(FILES ${CMAKE_BINARY_DIR}/LibChardetConfig.cmake 
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake)
+    install(FILES ${CMAKE_BINARY_DIR}/LibChardetConfigVersion.cmake 
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/cmake)
+endif()
